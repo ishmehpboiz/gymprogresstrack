@@ -2,19 +2,23 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getProfile } from "@/lib/storage";
+import { useAuth } from "@/context/AuthContext";
+import { isOnboardingComplete } from "@/lib/storage";
 
 export default function HomePage() {
   const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    const profile = getProfile();
-    if (profile?.onboardingComplete) {
-      router.replace("/dashboard");
-    } else {
-      router.replace("/onboarding");
+    if (isLoading) return;
+
+    if (!isAuthenticated) {
+      router.replace("/login");
+      return;
     }
-  }, [router]);
+
+    router.replace(isOnboardingComplete() ? "/dashboard" : "/onboarding");
+  }, [isLoading, isAuthenticated, router]);
 
   return (
     <main className="flex min-h-full items-center justify-center bg-zinc-950">
