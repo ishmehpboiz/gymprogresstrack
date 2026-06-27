@@ -27,6 +27,33 @@ export function saveWorkouts(workouts: Workout[]): void {
   localStorage.setItem(workoutsKey(), JSON.stringify(workouts));
 }
 
+export function getWorkoutById(id: string): Workout | null {
+  return getWorkouts().find((w) => w.id === id) ?? null;
+}
+
+export function addWorkout(data: Omit<Workout, "id">): Workout {
+  const workout: Workout = { ...data, id: crypto.randomUUID() };
+  saveWorkouts([...getWorkouts(), workout]);
+  return workout;
+}
+
+export function updateWorkout(id: string, data: Omit<Workout, "id">): boolean {
+  const workouts = getWorkouts();
+  const index = workouts.findIndex((w) => w.id === id);
+  if (index === -1) return false;
+  workouts[index] = { ...data, id };
+  saveWorkouts(workouts);
+  return true;
+}
+
+export function deleteWorkout(id: string): boolean {
+  const workouts = getWorkouts();
+  const filtered = workouts.filter((w) => w.id !== id);
+  if (filtered.length === workouts.length) return false;
+  saveWorkouts(filtered);
+  return true;
+}
+
 function daysAgo(n: number): string {
   const d = new Date();
   d.setDate(d.getDate() - n);

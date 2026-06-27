@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -53,8 +54,16 @@ export function DashboardOverview() {
         ? `${weightDelta.toFixed(1)} kg to gain`
         : `${Math.abs(weightDelta).toFixed(1)} kg to lose`;
 
+  function logWorkoutUrl(name?: string, date?: string): string {
+    const params = new URLSearchParams();
+    if (name) params.set("name", name);
+    if (date) params.set("date", date);
+    const query = params.toString();
+    return query ? `/workouts/new?${query}` : "/workouts/new";
+  }
+
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="relative mx-auto max-w-4xl px-4 py-6 pb-28 sm:px-6 sm:py-8 sm:pb-8">
       <header className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
@@ -102,7 +111,14 @@ export function DashboardOverview() {
           <p className="text-sm font-medium text-zinc-500">Latest session</p>
           {stats.latestWorkout ? (
             <>
-              <h2 className="mt-2 text-xl font-bold text-zinc-50">{stats.latestWorkout.name}</h2>
+              <Link
+                href={`/workouts/${stats.latestWorkout.id}/edit`}
+                className="group mt-2 block"
+              >
+                <h2 className="text-xl font-bold text-zinc-50 group-hover:text-emerald-400">
+                  {stats.latestWorkout.name}
+                </h2>
+              </Link>
               <p className="mt-1 text-sm text-zinc-400">
                 {formatWorkoutDate(stats.latestWorkout.date)}
               </p>
@@ -138,8 +154,19 @@ export function DashboardOverview() {
               <p className="mt-4 text-sm text-zinc-500">
                 Based on your {profile.goal} goal and {profile.trainingDays.length}-day schedule.
               </p>
-              <Button className="mt-5" fullWidth disabled>
-                Log workout (coming soon)
+              <Button
+                className="mt-5"
+                fullWidth
+                onClick={() =>
+                  router.push(
+                    logWorkoutUrl(
+                      stats.nextWorkout!.suggestion,
+                      stats.nextWorkout!.date,
+                    ),
+                  )
+                }
+              >
+                Log workout
               </Button>
             </>
           ) : (
@@ -147,6 +174,15 @@ export function DashboardOverview() {
           )}
         </div>
       </section>
+
+      <div className="fixed bottom-6 left-1/2 z-10 -translate-x-1/2 sm:hidden">
+        <Button
+          className="shadow-lg shadow-emerald-500/20"
+          onClick={() => router.push(logWorkoutUrl())}
+        >
+          + Log workout
+        </Button>
+      </div>
     </div>
   );
 }

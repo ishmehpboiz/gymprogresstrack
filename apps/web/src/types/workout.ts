@@ -1,6 +1,7 @@
 export interface WorkoutSet {
   reps: number;
   weight: number;
+  rpe?: number;
 }
 
 export interface WorkoutExercise {
