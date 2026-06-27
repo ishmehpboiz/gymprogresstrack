@@ -1,5 +1,10 @@
 # Dependencies
 node_modules/
+**/node_modules/
+
+# Next.js
+**/.next/
+**/out/
 
 # Environment
 .env
