@@ -106,6 +106,22 @@ export function logout(): void {
   localStorage.removeItem(SESSION_KEY);
 }
 
+export function updateUserName(name: string): boolean {
+  const trimmed = name.trim();
+  if (!trimmed) return false;
+  const session = getSession();
+  if (!session) return false;
+
+  const users = readUsers();
+  const index = users.findIndex((u) => u.id === session.user.id);
+  if (index === -1) return false;
+
+  users[index] = { ...users[index], name: trimmed };
+  writeUsers(users);
+  saveSession({ ...session.user, name: trimmed });
+  return true;
+}
+
 export function authErrorMessage(code: AuthErrorCode): string {
   const messages: Record<AuthErrorCode, string> = {
     invalid_email: "Enter a valid email address.",

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { StatCard } from "@/components/dashboard/StatCard";
 import { AppNav } from "@/components/layout/AppNav";
+import { StickyLogButton } from "@/components/layout/StickyLogButton";
+import { StatCard } from "@/components/dashboard/StatCard";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
 import { buildDashboardStats, formatRelativeDay } from "@/lib/dashboard-stats";
@@ -70,7 +71,7 @@ export function DashboardOverview() {
   }
 
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-6 pb-28 sm:px-6 sm:py-8 sm:pb-8">
+    <div className="relative page-container pb-24 sm:pb-8">
       <header className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
@@ -184,14 +185,7 @@ export function DashboardOverview() {
         </div>
       </section>
 
-      <div className="fixed bottom-6 left-1/2 z-10 -translate-x-1/2 sm:hidden">
-        <Button
-          className="shadow-lg shadow-emerald-500/20"
-          onClick={() => router.push(logWorkoutUrl())}
-        >
-          + Log workout
-        </Button>
-      </div>
+      <StickyLogButton />
     </div>
   );
 }

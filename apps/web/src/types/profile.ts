@@ -4,6 +4,8 @@ export type Experience = "beginner" | "intermediate" | "advanced";
 
 export type Equipment = "full_gym" | "home_gym" | "minimal" | "bodyweight";
 
+export type WeightUnit = "kg" | "lb";
+
 export interface UserProfile {
   goal: Goal;
   experience: Experience;
@@ -12,6 +14,9 @@ export interface UserProfile {
   targetWeight: number;
   equipment: Equipment;
   onboardingComplete: boolean;
+  height?: number;
+  units: WeightUnit;
+  injuryNotes?: string;
 }
 
 export const GOAL_OPTIONS: { value: Goal; label: string; description: string }[] = [
@@ -43,4 +48,9 @@ export const WEEKDAYS = [
   { value: "fri", label: "Fri" },
   { value: "sat", label: "Sat" },
   { value: "sun", label: "Sun" },
+];
+
+export const UNIT_OPTIONS: { value: WeightUnit; label: string }[] = [
+  { value: "kg", label: "Metric (kg)" },
+  { value: "lb", label: "Imperial (lb)" },
 ];

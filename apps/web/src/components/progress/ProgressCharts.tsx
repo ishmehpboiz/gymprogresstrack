@@ -13,6 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import { AppNav } from "@/components/layout/AppNav";
+import { StickyLogButton } from "@/components/layout/StickyLogButton";
 import { getBodyweightEntries } from "@/lib/bodyweight";
 import {
   getBodyweightTrendData,
@@ -46,7 +47,7 @@ export function ProgressCharts() {
   const bodyweightData = getBodyweightTrendData(bodyweightEntries);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="page-container pb-24 sm:pb-8">
       <AppNav />
       <h1 className="text-2xl font-bold text-zinc-50">Progress charts</h1>
       <p className="mt-1 text-zinc-400">Visualize strength, volume, and bodyweight trends.</p>
@@ -142,6 +143,7 @@ export function ProgressCharts() {
           )}
         </div>
       </div>
+      <StickyLogButton />
     </div>
   );
 }

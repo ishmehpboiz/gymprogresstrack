@@ -1,4 +1,6 @@
 import type { Workout, WorkoutExercise } from "@/types/workout";
+import { isValidReps, isValidRpe, isValidWeight } from "@/lib/validation";
+import { getWorkouts } from "@/lib/workouts";
 
 export interface WorkoutFormValues {
   name: string;
@@ -30,19 +32,32 @@ export function validateWorkout(values: WorkoutFormValues): string | null {
     }
 
     for (const set of exercise.sets) {
-      if (set.reps <= 0 || set.reps > 999) {
+      if (!isValidReps(set.reps)) {
         return `${exercise.name}: reps must be between 1 and 999.`;
       }
-      if (set.weight < 0 || set.weight > 9999) {
+      if (!isValidWeight(set.weight)) {
         return `${exercise.name}: weight cannot be negative.`;
       }
-      if (set.rpe !== undefined && (set.rpe < 1 || set.rpe > 10)) {
+      if (!isValidRpe(set.rpe)) {
         return `${exercise.name}: RPE must be between 1 and 10.`;
       }
     }
   }
 
   return null;
+}
+
+export function isDuplicateWorkout(
+  values: WorkoutFormValues,
+  excludeId?: string,
+): boolean {
+  const name = values.name.trim().toLowerCase();
+  return getWorkouts().some(
+    (w) =>
+      w.id !== excludeId &&
+      w.date === values.date &&
+      w.name.trim().toLowerCase() === name,
+  );
 }
 
 export function createEmptyExercise(): WorkoutExercise {

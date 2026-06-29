@@ -15,7 +15,12 @@ export function getProfile(): UserProfile | null {
   const raw = localStorage.getItem(profileKey());
   if (!raw) return null;
   try {
-    return JSON.parse(raw) as UserProfile;
+    const profile = JSON.parse(raw) as UserProfile;
+    return {
+      ...profile,
+      units: profile.units ?? "kg",
+      onboardingComplete: profile.onboardingComplete ?? false,
+    };
   } catch {
     return null;
   }

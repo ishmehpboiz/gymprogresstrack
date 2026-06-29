@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AppNav } from "@/components/layout/AppNav";
+import { StickyLogButton } from "@/components/layout/StickyLogButton";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { filterWorkouts, getUniqueExerciseNames } from "@/lib/progress-data";
@@ -86,7 +87,7 @@ export function WorkoutHistory() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="page-container pb-24 sm:pb-8">
       <AppNav />
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -137,6 +138,7 @@ export function WorkoutHistory() {
           filtered.map((workout) => <WorkoutCard key={workout.id} workout={workout} />)
         )}
       </div>
+      <StickyLogButton />
     </div>
   );
 }

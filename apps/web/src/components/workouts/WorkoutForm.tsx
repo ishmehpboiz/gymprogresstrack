@@ -10,6 +10,7 @@ import {
   createEmptyExercise,
   createEmptyWorkout,
   formValuesToWorkout,
+  isDuplicateWorkout,
   validateWorkout,
   type WorkoutFormValues,
 } from "@/lib/workout-validation";
@@ -28,6 +29,7 @@ export function WorkoutForm({ mode, initialValues, workoutId }: WorkoutFormProps
   );
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastSavedHash, setLastSavedHash] = useState<string | null>(null);
 
   function updateExercise(index: number, exercise: WorkoutFormValues["exercises"][number]) {
     setValues((prev) => ({
@@ -60,8 +62,20 @@ export function WorkoutForm({ mode, initialValues, workoutId }: WorkoutFormProps
       return;
     }
 
-    setIsSubmitting(true);
+    if (isDuplicateWorkout(values, workoutId)) {
+      setError("A workout with this name already exists on this date.");
+      return;
+    }
+
     const payload = formValuesToWorkout(values);
+    const payloadHash = JSON.stringify(payload);
+    if (payloadHash === lastSavedHash) {
+      setError("No changes to save.");
+      return;
+    }
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     if (mode === "create") {
       addWorkout(payload);
@@ -74,6 +88,7 @@ export function WorkoutForm({ mode, initialValues, workoutId }: WorkoutFormProps
       }
     }
 
+    setLastSavedHash(payloadHash);
     router.push("/dashboard");
   }
 

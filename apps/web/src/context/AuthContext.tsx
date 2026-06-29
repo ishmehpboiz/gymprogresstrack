@@ -19,6 +19,7 @@ interface AuthContextValue {
   login: (input: LoginInput) => ReturnType<typeof authLogin>;
   signup: (input: SignupInput) => ReturnType<typeof authSignup>;
   logout: () => void;
+  refreshSession: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -49,6 +50,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
   }, []);
 
+  const refreshSession = useCallback(() => {
+    setSession(getSession());
+  }, []);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user: session?.user ?? null,
@@ -57,8 +62,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       signup,
       logout,
+      refreshSession,
     }),
-    [session, isLoading, login, signup, logout],
+    [session, isLoading, login, signup, logout, refreshSession],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

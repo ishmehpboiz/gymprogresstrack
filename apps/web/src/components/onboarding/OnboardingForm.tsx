@@ -123,6 +123,7 @@ export function OnboardingForm() {
       targetWeight: parseFloat(form.targetWeight),
       equipment: form.equipment!,
       onboardingComplete: true,
+      units: "kg",
     };
 
     saveProfile(profile);

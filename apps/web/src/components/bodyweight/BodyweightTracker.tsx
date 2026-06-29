@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import { AppNav } from "@/components/layout/AppNav";
+import { StickyLogButton } from "@/components/layout/StickyLogButton";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import {
@@ -62,7 +63,7 @@ export function BodyweightTracker() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="page-container pb-24 sm:pb-8">
       <AppNav />
       <h1 className="text-2xl font-bold text-zinc-50">Bodyweight tracking</h1>
       <p className="mt-1 text-zinc-400">Log your weight and track the trend over time.</p>
@@ -131,7 +132,29 @@ export function BodyweightTracker() {
         {entries.length === 0 ? (
           <p className="p-4 text-sm text-zinc-500">No entries yet.</p>
         ) : (
-          <table className="w-full text-sm">
+          <>
+            <div className="entry-cards p-4">
+              {entries.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="flex items-center justify-between rounded-lg bg-zinc-800/50 px-3 py-3"
+                >
+                  <div>
+                    <p className="text-sm text-zinc-300">{entry.date}</p>
+                    <p className="font-semibold text-zinc-100">{entry.weight} kg</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(entry.id)}
+                    className="text-xs text-red-400"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="entry-table responsive-table">
+              <table>
             <thead>
               <tr className="border-b border-zinc-800 text-left text-zinc-500">
                 <th className="px-4 py-2 font-medium">Date</th>
@@ -156,9 +179,12 @@ export function BodyweightTracker() {
                 </tr>
               ))}
             </tbody>
-          </table>
+              </table>
+            </div>
+          </>
         )}
       </div>
+      <StickyLogButton />
     </div>
   );
 }
