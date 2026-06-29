@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { ExercisePicker } from "@/components/exercises/ExercisePicker";
 import type { WorkoutExercise } from "@/types/workout";
 
 interface ExerciseBlockProps {
@@ -50,11 +51,10 @@ export function ExerciseBlock({
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
       <div className="flex items-start gap-3">
         <div className="flex-1">
-          <Input
+          <ExercisePicker
             label={`Exercise ${index + 1}`}
-            placeholder="e.g. Bench Press"
             value={exercise.name}
-            onChange={(e) => onChange(index, { ...exercise, name: e.target.value })}
+            onChange={(name) => onChange(index, { ...exercise, name })}
           />
         </div>
         {canRemove && (
