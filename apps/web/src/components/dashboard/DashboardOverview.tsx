@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StatCard } from "@/components/dashboard/StatCard";
+import { AppNav } from "@/components/layout/AppNav";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
 import { buildDashboardStats, formatRelativeDay } from "@/lib/dashboard-stats";
+import { getLatestBodyweight, seedBodyweightFromProfile } from "@/lib/bodyweight";
 import { getProfile } from "@/lib/storage";
 import {
   formatWorkoutDate,
@@ -29,8 +31,13 @@ export function DashboardOverview() {
     if (!storedProfile) return;
 
     const workouts = seedMockWorkouts(storedProfile);
+    seedBodyweightFromProfile(storedProfile.currentWeight);
+    const latestWeight = getLatestBodyweight() ?? storedProfile.currentWeight;
     setProfile(storedProfile);
-    setStats(buildDashboardStats(storedProfile, workouts));
+    setStats({
+      ...buildDashboardStats(storedProfile, workouts),
+      currentBodyweight: latestWeight,
+    });
   }, []);
 
   function handleLogout() {
@@ -79,7 +86,9 @@ export function DashboardOverview() {
         </Button>
       </header>
 
-      <section className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <AppNav />
+
+      <section className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
           label="Workouts this week"
           value={stats.workoutsThisWeek}
